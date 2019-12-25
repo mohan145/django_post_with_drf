@@ -1,0 +1,567 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sample API",
+    "description": "API description in Markdown.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8000",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "definitions": {
+    "ReactType": {
+      "type": "string",
+      "enum": [
+        "haha",
+        "love",
+        "like",
+        "wow",
+        "sad",
+        "angry"
+      ]
+    },
+    "Reactions": {
+      "type": "object",
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReactType"
+          }
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "PersonDetails": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "ProfilePicUrl": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "username",
+        "id",
+        "profilePicUrl"
+      ]
+    },
+    "ReplyDetails": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "person": {
+          "$ref": "#/definitions/PersonDetails"
+        },
+        "comment_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment_content": {
+          "type": "string"
+        },
+        "reactions": {
+          "$ref": "#/definitions/Reactions"
+        }
+      },
+      "required": [
+        "id",
+        "person",
+        "comment_at",
+        "comment_content",
+        "reactions"
+      ]
+    },
+    "CommentDetails": {
+      "type": "object",
+      "properties": {
+        "post": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "person": {
+          "$ref": "#/definitions/PersonDetails"
+        },
+        "comment_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment_content": {
+          "type": "string"
+        },
+        "reactions": {
+          "$ref": "#/definitions/Reactions"
+        },
+        "replies_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reply": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReplyDetails"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "person",
+        "comment_at",
+        "comment_content",
+        "reactions",
+        "replies_count",
+        "reply"
+      ]
+    },
+    "PersonReaction": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "$ref": "#/definitions/PersonDetails"
+        },
+        "reaction": {
+          "$ref": "#/definitions/ReactType"
+        }
+      }
+    },
+    "PostId": {
+      "type": "string"
+    }
+  },
+  "parameters": {
+    "ReactType": {
+      "name": "react_type",
+      "description": "react type",
+      "in": "body",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/ReactType"
+      }
+    },
+    "PostId": {
+      "name": "post_id",
+      "description": "post's id",
+      "in": "path",
+      "required": true,
+      "type": "string"
+    },
+    "CommentId": {
+      "name": "comemnt_id",
+      "description": "comments's id",
+      "in": "path",
+      "required": true,
+      "type": "string"
+    },
+    "CommentContent": {
+      "name": "comment_content",
+      "description": "comment content ",
+      "in": "body",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    },
+    "UserId": {
+      "name": "comemnt_id",
+      "description": "comments's id",
+      "in": "body",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  },
+  "responses": {
+    "GetPostDetailsResponse": {
+      "description": "reponse for get post",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "post_id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "posted_by": {
+            "$ref": "#/definitions/PersonDetails"
+          },
+          "posted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "post_content": {
+            "type": "string"
+          },
+          "reactions": {
+            "$ref": "#/definitions/Reactions"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/CommentDetails"
+            }
+          },
+          "comemnts_count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "GetCommentRepliesDetailsResponse": {
+      "description": "response for get replies for comment",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ReplyDetails"
+        }
+      }
+    },
+    "GetPostsPostedByPersonResponse": {
+      "description": "response for get posts by person",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/responses/GetPostDetailsResponse"
+        }
+      }
+    },
+    "GetReactionsForThePost": {
+      "description": "response for the reactions to a post",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/PersonReaction"
+        }
+      }
+    },
+    "GetListOfPostResponse": {
+      "description": "response for the list of post",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/PostId"
+        }
+      }
+    },
+    "GetReactionsCountForPosts": {
+      "description": "response for the get reaction  count for posts",
+      "schema": {
+        "type": "integer",
+        "format": "int64"
+      }
+    },
+    "GetReactionMetricsForPost": {
+      "description": "response for the get reaction  metric for a post",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Reactions"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/post/": {
+      "post": {
+        "summary": "post ",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "post_content",
+            "in": "body",
+            "required": true,
+            "description": "post content to be posted",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "post posted successfully"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      }
+    },
+    "/post/{post_id}": {
+      "get": {
+        "summary": "get the details of the post",
+        "operationId": "get_post_details",
+        "description": "get the post with post_id",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetPostDetailsResponse"
+          }
+        }
+      },
+      "delete": {
+        "summary": "deletes the post with given id",
+        "operationId": "delte_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "successfully deleted"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      }
+    },
+    "/post/{post_id}/comment/{comment_id}/replies/": {
+      "get": {
+        "summary": "get replies for  a comment",
+        "operationId": "get_comment_replies",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          },
+          {
+            "$ref": "#/parameters/CommentId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetCommentRepliesDetailsResponse"
+          }
+        }
+      }
+    },
+    "/post/{post_id}/comment": {
+      "post": {
+        "summary": "comment a post",
+        "operationId": "post_comment_for_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          },
+          {
+            "$ref": "#/parameters/CommentContent"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "comment posted on post"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      }
+    },
+    "/post/{post_id}/comment/{comment_id}/reply": {
+      "post": {
+        "summary": "reply for  a comment",
+        "operationId": "post_comment_for_comment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          },
+          {
+            "$ref": "#/parameters/CommentId"
+          },
+          {
+            "$ref": "#/parameters/CommentContent"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "comment successfully commented"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      }
+    },
+    "/post/{post_id}/react": {
+      "post": {
+        "summary": "react to a post ",
+        "operationId": "post_react_to_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          },
+          {
+            "$ref": "#/parameters/ReactType"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "reaction successfully reacted"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "summary": "get reactions for the post ",
+        "operationId": "get_reactions_for_post",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetReactionsForThePost"
+          }
+        }
+      }
+    },
+    "/post/{post_id}/comment/{comment_id}/react": {
+      "post": {
+        "summary": "react to comment",
+        "operationId": "post_react_to_comment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          },
+          {
+            "$ref": "#/parameters/CommentId"
+          },
+          {
+            "$ref": "#/parameters/ReactType"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "reactions succefully reacted to comment"
+          }
+        },
+        "security": [
+          {
+            "oauth": [
+              "user"
+            ]
+          }
+        ]
+      }
+    },
+    "/post/{post_id}/metrics": {
+      "get": {
+        "summary": "get metrics for the post with post id",
+        "operationId": "geet_post_metrics",
+        "parameters": [
+          {
+            "$ref": "#/parameters/PostId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetReactionMetricsForPost"
+          }
+        }
+      }
+    },
+    "/person/{user_id}/post": {
+      "get": {
+        "summary": "get posts posted by person",
+        "operationId": "get_posts_posted_by_person",
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetPostsPostedByPersonResponse"
+          }
+        }
+      }
+    },
+    "/person/{user_id}/post/react": {
+      "get": {
+        "summary": "get post reacted by user",
+        "operationId": "get_post_reacted_by_user",
+        "parameters": [
+          {
+            "$ref": "#/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetListOfPostResponse"
+          }
+        }
+      }
+    },
+    "/post/react/count": {
+      "get": {
+        "summary": "get total reactions for posts ",
+        "operationId": "get_reactions_count_for_posts",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetReactionsCountForPosts"
+          }
+        }
+      }
+    },
+    "/post/react/positive": {
+      "get": {
+        "summary": "get positive reacted post ",
+        "operationId": "get_postive_reacted_posts",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetListOfPostResponse"
+          }
+        }
+      }
+    }
+  }
+}
